@@ -299,22 +299,23 @@ footer{position:relative;z-index:1;padding:45px 5% 30px;border-top:1px solid var
           <span style="background:#ffbd2e"></span>
           <span style="background:#27c93f"></span>
         </div>
-        <div class="terminal-title">ikram@datascience:~ (interactive)</div>
+        <div class="terminal-title">ikram@datascience:~ (python)</div>
       </div>
       <div class="terminal-body" id="termBody">
-        <div class="terminal-line"><span class="term-prompt">ikram@ai:~$</span> <span class="term-cmd">welcome --interactive</span></div>
-        <div class="term-out">Hi! Click a command chip below or type <b>help</b>, <b>whoami</b>, <b>skills</b>, <b>projects</b>, <b>contact</b>.</div>
+        <div class="terminal-line"><span class="term-prompt">ikram@data:~$</span> <span class="term-cmd">python train_model.py</span></div>
+        <div class="term-out">[EDA] UCI Student Dataset loaded (649 rows, 33 cols)<br/>[ML] RandomForest Accuracy: <b style="color:var(--green)">89.0%</b> | F1: 0.88<br/>Click a data command below or type <b>help</b>.</div>
       </div>
       <div class="terminal-chips">
+        <button class="term-chip" onclick="runTerm('dataset')">dataset</button>
+        <button class="term-chip" onclick="runTerm('eda')">eda</button>
+        <button class="term-chip" onclick="runTerm('models')">models</button>
+        <button class="term-chip" onclick="runTerm('pipeline')">pipeline</button>
         <button class="term-chip" onclick="runTerm('whoami')">whoami</button>
-        <button class="term-chip" onclick="runTerm('skills')">skills</button>
-        <button class="term-chip" onclick="runTerm('projects')">projects</button>
-        <button class="term-chip" onclick="runTerm('education')">education</button>
         <button class="term-chip" onclick="runTerm('clear')">clear</button>
       </div>
       <div class="terminal-input-row">
         <span class="term-prompt" style="font-family:'JetBrains Mono',monospace;font-size:.82rem">$</span>
-        <input class="terminal-input" id="termInput" placeholder="Type a command & press Enter..." onkeydown="if(event.key==='Enter'){runTerm(this.value);this.value=''}"/>
+        <input class="terminal-input" id="termInput" placeholder="Try: dataset, eda, models, pipeline..." onkeydown="if(event.key==='Enter'){runTerm(this.value);this.value=''}"/>
       </div>
     </div>
   </div>
@@ -718,7 +719,11 @@ type();
 
 // INTERACTIVE TERMINAL
 const termResponses={
-  help:'Commands: <b>whoami</b>, <b>skills</b>, <b>projects</b>, <b>education</b>, <b>contact</b>, <b>clear</b>',
+  help:'Data Commands: <b>dataset</b>, <b>eda</b>, <b>models</b>, <b>pipeline</b> | Info: <b>whoami</b>, <b>skills</b>, <b>projects</b>, <b>clear</b>',
+  dataset:'df.shape = (649, 33) | Target: Final Grade G3 (0–20) | Missing Values: 0 | Top Features: G1, G2, studytime, absences.',
+  eda:'[EDA Insights] r(G1, G3)=0.83 | Study > 5h/wk boosts pass rate by +24% | High absences (>10) correlate with -3.2 pts.',
+  models:'Benchmark -> Random Forest: 89% | SVM: 86% | Decision Tree: 82% | KNN: 80% | Logistic Reg: 78%.',
+  pipeline:'01. SQL/CSV Ingestion -> 02. Pandas EDA -> 03. Feature Scaling -> 04. Scikit-learn ML -> 05. Chart.js / Power BI.',
   whoami:'Ikram Elkarkadi — Data Science Student (Bachelor SD) @ EST Kelaâ des Sraghna, Morocco. Ex-Intern @ Ménara Holding.',
   skills:'Python (90%), Pandas/NumPy (92%), Scikit-learn (88%), SQL (85%), Power BI/Tableau (75%), PHP/Laravel (75%).',
   projects:'1) Student Performance Analysis (UCI + ML 89%) | 2) Menara Intel Master (Full-stack BI) | 3) Attendance System.',
