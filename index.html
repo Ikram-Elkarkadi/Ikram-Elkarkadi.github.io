@@ -98,9 +98,17 @@ section{position:relative;z-index:1;padding:95px 5%}
 
 /* ABOUT */
 .about-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:70px;align-items:center}
-.about-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:36px;position:relative;overflow:hidden;transition:transform .3s}
-.about-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--purple),var(--pink))}
-.avatar-ring{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-size:3.2rem;margin:0 auto 22px;position:relative;animation:float 5s ease-in-out infinite}
+.about-card{background:linear-gradient(145deg,rgba(15,23,42,0.8),rgba(10,15,30,0.9));border:1px solid rgba(0,212,255,0.2);border-radius:24px;padding:36px;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;box-shadow:0 20px 50px rgba(0,0,0,0.4)}
+.about-card:hover{transform:translateY(-4px);box-shadow:0 25px 60px rgba(0,212,255,0.12)}
+.about-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,var(--cyan),var(--purple),var(--pink))}
+.avatar-ring{width:124px;height:124px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(0,212,255,0.22),rgba(124,58,237,0.28));border:2px solid rgba(0,212,255,0.45);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative;animation:float 5s ease-in-out infinite;box-shadow:0 0 35px rgba(0,212,255,0.22)}
+.avatar-status{position:absolute;bottom:6px;right:6px;width:16px;height:16px;background:var(--green);border:3px solid #0a0f1e;border-radius:50%;box-shadow:0 0 12px var(--green)}
+.about-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.about-tab{padding:7px 15px;border-radius:50px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--muted);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .25s}
+.about-tab:hover{border-color:var(--cyan);color:var(--text)}
+.about-tab.active{background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(124,58,237,0.25));border-color:var(--cyan);color:var(--cyan)}
+.about-panel{display:none;animation:fadeIn .35s ease}
+.about-panel.active{display:block}
 .about-name{text-align:center;font-size:1.3rem;font-weight:700;margin-bottom:4px}
 .about-role{text-align:center;color:var(--cyan);font-size:.85rem;font-family:'JetBrains Mono',monospace;margin-bottom:22px}
 .info-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.86rem}
@@ -327,9 +335,17 @@ footer{position:relative;z-index:1;padding:45px 5% 30px;border-top:1px solid var
     <div class="about-grid">
       <div class="reveal">
         <div class="about-card">
-          <div class="avatar-ring">👩‍💻</div>
+          <div class="avatar-ring">
+            <svg width="82" height="82" viewBox="0 0 82 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="41" cy="41" r="37" stroke="url(#avGrad)" stroke-width="2" stroke-dasharray="6 4"/>
+              <circle cx="41" cy="41" r="29" fill="#070B19" stroke="#38BDF8" stroke-opacity="0.35"/>
+              <text x="41" y="48" text-anchor="middle" fill="url(#avGrad)" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="800" letter-spacing="-1">IE</text>
+              <defs><linearGradient id="avGrad" x1="0" y1="0" x2="82" y2="82"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#A855F7"/></linearGradient></defs>
+            </svg>
+            <div class="avatar-status" title="Available for Data Science Collaborations"></div>
+          </div>
           <div class="about-name">Ikram Elkarkadi</div>
-          <div class="about-role">// Data Science & AI</div>
+          <div class="about-role">// Data Science &amp; AI Engineer</div>
           <div class="info-item"><div class="info-left"><span>📍</span><span>Kelaâ des Sraghna, Morocco</span></div></div>
           <div class="info-item"><div class="info-left"><span>🎓</span><span>EST · Université Cadi Ayyad</span></div></div>
           <div class="info-item"><div class="info-left"><span>💼</span><span>Ex-Intern @ Ménara Holding</span></div></div>
@@ -346,11 +362,26 @@ footer{position:relative;z-index:1;padding:45px 5% 30px;border-top:1px solid var
       </div>
       <div class="about-text reveal">
         <div class="section-label">About Me</div>
-        <h2 class="section-title">Turning Raw Data into <span>Actionable Insights</span></h2>
-        <p>I'm <strong>Ikram Elkarkadi</strong>, pursuing a <strong>Bachelor's degree in Data Science (SD)</strong> at EST Kelaâ des Sraghna, Université Cadi Ayyad, after earning a <strong>DUT in Data Engineering</strong>.</p>
-        <p>My work bridges <strong>data analytics, machine learning, and full-stack engineering</strong> — transforming complex datasets into clear visual stories and strategic decisions.</p>
-        <p>During my internship at <strong>Ménara Holding (Marrakech)</strong>, I built a full-stack real estate intelligence web app connecting SQL databases with interactive business dashboards.</p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:22px">
+        <h2 class="section-title" style="margin-bottom:24px">Turning Raw Data into <span>Actionable Insights</span></h2>
+        <div class="about-tabs">
+          <button class="about-tab active" onclick="switchAbout(0,this)">🎯 Overview</button>
+          <button class="about-tab" onclick="switchAbout(1,this)">🤖 ML &amp; Research</button>
+          <button class="about-tab" onclick="switchAbout(2,this)">⚡ Engineering &amp; BI</button>
+        </div>
+        <div class="about-panel active" id="aboutP0">
+          <p>I'm <strong>Ikram Elkarkadi</strong>, pursuing a <strong>Bachelor's degree in Data Science (SD)</strong> at EST Kelaâ des Sraghna, Université Cadi Ayyad, after earning a <strong>DUT in Data Engineering</strong>.</p>
+          <p>My work bridges <strong>data analytics, machine learning, and full-stack engineering</strong> — transforming complex datasets into clear visual stories and strategic decisions.</p>
+        </div>
+        <div class="about-panel" id="aboutP1">
+          <p>Focused on <strong>predictive modeling, EDA, and statistical inference</strong> using Python, Pandas, NumPy, and Scikit-learn.</p>
+          <p>In my UCI Student Performance study, I benchmarked 5 supervised classifiers (Random Forest, SVM, Decision Tree, KNN, Logistic Regression), reaching <strong>89% accuracy</strong> with Random Forest.</p>
+        </div>
+        <div class="about-panel" id="aboutP2">
+          <p>During my internship at <strong>Ménara Holding (Marrakech)</strong>, I engineered <strong>Menara Intel Master</strong> — a full-stack real estate intelligence web app built with PHP/Laravel, MySQL, and Chart.js.</p>
+          <p>Optimized relational SQL queries, reducing dashboard load latency by <strong>40%</strong> and enabling real-time KPI reporting.</p>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px">
+          <button onclick="openCV()" class="btn-primary" style="padding:11px 24px;font-size:.86rem">View / Print CV 📄</button>
           <a href="https://linkedin.com/in/ikram-elkarkadi/" target="_blank" class="btn-secondary" style="padding:10px 22px;font-size:.85rem">LinkedIn ↗</a>
           <a href="https://github.com/Ikram-Elkarkadi" target="_blank" class="btn-secondary" style="padding:10px 22px;font-size:.85rem">GitHub ↗</a>
         </div>
@@ -802,6 +833,32 @@ function openProject(i){
     </div>
     <div class="project-tags" style="margin-bottom:22px">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
     ${p.link?`<a href="${p.link}" target="_blank" class="btn-primary" style="display:inline-block;padding:11px 24px;font-size:.86rem">Open on GitHub ↗</a>`:`<span style="font-size:.82rem;color:var(--muted)">🔒 Private / Internal Enterprise Project</span>`}
+  `;
+  document.getElementById('projectModal').classList.add('open');
+}
+function switchAbout(idx,btn){
+  document.querySelectorAll('.about-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.about-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+}
+function openCV(){
+  document.getElementById('modalContent').innerHTML=`
+    <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--cyan);margin-bottom:6px">CURRICULUM VITAE · SUMMARY</div>
+    <h2 style="font-size:1.5rem;margin-bottom:4px">Ikram Elkarkadi</h2>
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:16px">Data Science Student (Bachelor SD) · Kelaâ des Sraghna, Morocco · ikramelkarkadi@gmail.com</p>
+    <div style="border-top:1px solid var(--border);padding-top:14px;margin-bottom:14px">
+      <strong style="color:var(--cyan);font-size:.85rem">EDUCATION</strong>
+      <p style="color:var(--muted);font-size:.86rem;margin-top:6px">• <b>Bachelor in Data Science (SD)</b> — EST Kelaâ des Sraghna, Université Cadi Ayyad (2024–Present)<br/>• <b>DUT in Data Engineering</b> — EST Kelaâ des Sraghna, Université Cadi Ayyad (2022–2024)</p>
+    </div>
+    <div style="margin-bottom:14px">
+      <strong style="color:var(--cyan);font-size:.85rem">EXPERIENCE & PROJECTS</strong>
+      <p style="color:var(--muted);font-size:.86rem;margin-top:6px">• <b>Data & Web Developer Intern @ Ménara Holding</b> (Summer 2024) — Built Menara Intel Master (-40% SQL latency)<br/>• <b>Student Performance ML Study</b> — 89% accuracy with Random Forest on UCI dataset<br/>• <b>Attendance Management System</b> — Automated tracking & PDF reporting</p>
+    </div>
+    <div style="margin-bottom:18px">
+      <strong style="color:var(--cyan);font-size:.85rem">CORE STACK</strong>
+      <p style="color:var(--muted);font-size:.86rem;margin-top:6px">Python, SQL, R, Scikit-learn, Pandas, NumPy, TensorFlow, Power BI, MySQL, MongoDB, PHP/Laravel, Git</p>
+    </div>
+    <button onclick="window.print()" class="btn-primary" style="padding:10px 22px;font-size:.85rem">Print / Save as PDF 🖨️</button>
   `;
   document.getElementById('projectModal').classList.add('open');
 }
