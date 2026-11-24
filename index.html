@@ -161,7 +161,11 @@ section{position:relative;z-index:1;padding:95px 5%}
 .project-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(124,58,237,0.06));opacity:0;transition:opacity .3s;pointer-events:none}
 .project-card:hover{border-color:rgba(0,212,255,0.4);box-shadow:0 20px 60px rgba(0,0,0,0.5),var(--glow-cyan)}
 .project-card:hover::before{opacity:1}
-.project-header{padding:26px 26px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.project-cover{width:100%;height:185px;position:relative;overflow:hidden;background:#070B19;border-bottom:1px solid var(--border)}
+.project-cover img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease;display:block}
+.project-card:hover .project-cover img{transform:scale(1.06)}
+.project-cover-badge{position:absolute;top:12px;left:12px;padding:4px 11px;background:rgba(2,8,23,0.78);backdrop-filter:blur(8px);border:1px solid rgba(0,212,255,0.35);border-radius:50px;font-size:.7rem;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-weight:600}
+.project-header{padding:18px 24px 0;display:flex;justify-content:space-between;align-items:center}
 .project-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
 .project-links{display:flex;gap:8px;align-items:center}
 .project-link{padding:6px 12px;background:rgba(255,255,255,0.06);border-radius:10px;display:flex;align-items:center;gap:5px;color:var(--text);text-decoration:none;font-size:.78rem;font-weight:600;transition:all .3s}
@@ -492,54 +496,16 @@ footer{position:relative;z-index:1;padding:45px 5% 30px;border-top:1px solid var
       <div class="section-label">Portfolio</div>
       <h2 class="section-title" style="margin-bottom:20px">Featured <span>Projects</span></h2>
     </div>
-    <div class="filter-tabs">
+    <div class="filter-tabs" style="margin-bottom:20px">
       <button class="filter-tab active" onclick="filterProjects('all',this)">All Projects</button>
       <button class="filter-tab" onclick="filterProjects('ml',this)">Data Science & ML</button>
       <button class="filter-tab" onclick="filterProjects('web',this)">Full-Stack Web</button>
       <button class="filter-tab" onclick="filterProjects('auto',this)">Automation</button>
     </div>
-    <div class="projects-grid">
-      <div class="project-card reveal tilt-card" data-type="ml" onclick="openProject(0)">
-        <div class="project-header">
-          <div class="project-icon" style="background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.25)">📊</div>
-          <div style="text-align:right">
-            <div class="featured-badge" style="margin-bottom:8px">⭐ Featured</div>
-            <div class="project-links" onclick="event.stopPropagation()">
-              <a href="https://github.com/Ikram-Elkarkadi/python-data-analysis" target="_blank" class="project-link">GitHub ↗</a>
-            </div>
-          </div>
-        </div>
-        <div class="project-body">
-          <div class="project-name">Student Performance Analysis</div>
-          <div class="project-desc">EDA and predictive modeling on the UCI Student Performance dataset using Decision Tree & Random Forest (89% accuracy). Click for details →</div>
-          <div class="project-tags"><span class="tag">Python</span><span class="tag">Scikit-learn</span><span class="tag">Pandas</span><span class="tag">ML</span></div>
-        </div>
-      </div>
-
-      <div class="project-card reveal tilt-card" data-type="web" onclick="openProject(1)">
-        <div class="project-header">
-          <div class="project-icon" style="background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3)">🏢</div>
-          <div class="project-links"><span class="project-link">Details →</span></div>
-        </div>
-        <div class="project-body">
-          <div class="project-name">Menara Intel Master</div>
-          <div class="project-desc">Full-stack real estate intelligence web app built during internship at Ménara Holding, Marrakech with BI dashboards. Click for details →</div>
-          <div class="project-tags"><span class="tag">PHP</span><span class="tag">Laravel</span><span class="tag">MySQL</span><span class="tag">Chart.js</span></div>
-        </div>
-      </div>
-
-      <div class="project-card reveal tilt-card" data-type="auto" onclick="openProject(2)">
-        <div class="project-header">
-          <div class="project-icon" style="background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.25)">📋</div>
-          <div class="project-links"><span class="project-link">Details →</span></div>
-        </div>
-        <div class="project-body">
-          <div class="project-name">Attendance Management System</div>
-          <div class="project-desc">Automated student attendance tracking system with real-time analytics, absence alerts, and PDF reporting. Click for details →</div>
-          <div class="project-tags"><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Automation</span><span class="tag">PDF</span></div>
-        </div>
-      </div>
+    <div style="text-align:center;margin-bottom:34px">
+      <a href="admin.html#projects" class="copy-mini" style="text-decoration:none;padding:7px 16px;font-size:.78rem;display:inline-flex;align-items:center;gap:6px">📸 Manage Project Photos &amp; Info →</a>
     </div>
+    <div class="projects-grid" id="projectsGrid"></div>
   </div>
 </section>
 
@@ -854,33 +820,100 @@ function filterProjects(type,btn){
   });
 }
 
-// 3D TILT ON PROJECT CARDS
-document.querySelectorAll('.tilt-card').forEach(card=>{
-  card.addEventListener('mousemove',e=>{
-    const r=card.getBoundingClientRect();
-    const x=(e.clientX-r.left)/r.width-0.5,y=(e.clientY-r.top)/r.height-0.5;
-    card.style.transform=`perspective(900px) rotateX(${(-y*8).toFixed(2)}deg) rotateY(${(x*8).toFixed(2)}deg) translateY(-6px)`;
-  });
-  card.addEventListener('mouseleave',()=>{card.style.transform='';});
-});
-
-// PROJECT MODAL
-const projectData=[
-  {title:'📊 Student Performance Analysis',sub:'Data Science & Machine Learning · Public Repo',desc:'End-to-end exploratory data analysis and supervised learning pipeline on the UCI Student Performance dataset. Evaluated Logistic Regression, Decision Trees, KNN, SVM, and Random Forest.',highlights:['89% prediction accuracy with Random Forest Classifier','Correlation analysis of study time, absences, and prior grades','Clean Seaborn & Matplotlib visual storytelling'],tags:['Python','Scikit-learn','Pandas','Seaborn'],link:'https://github.com/Ikram-Elkarkadi/python-data-analysis'},
-  {title:'🏢 Menara Intel Master',sub:'Internship @ Ménara Holding · Marrakech',desc:'Full-stack real estate intelligence web platform combining property operations with interactive analytics dashboards for management.',highlights:['Built end-to-end with PHP, Laravel, MySQL & Chart.js','Optimized complex SQL queries (-40% page load time)','Interactive KPIs and real-time property filtering'],tags:['PHP','Laravel','MySQL','JavaScript','Chart.js'],link:''},
-  {title:'📋 Attendance Management System',sub:'Automation & Reporting',desc:'Automated attendance tracking application designed for academic environments with instant reporting and absence monitoring.',highlights:['Real-time attendance analytics dashboard','Automated absence alert triggers','One-click PDF summary report generation'],tags:['Python','SQL','Automation','Reporting'],link:''}
+// DEFAULT PROJECTS + DYNAMIC LOCALSTORAGE RENDERING
+function makeCoverSvg(label,metric,c1,c2){
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#040A18"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="a" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/></linearGradient></defs><rect width="720" height="360" fill="url(#g)"/><circle cx="590" cy="80" r="140" fill="${c1}" opacity="0.14"/><circle cx="140" cy="300" r="130" fill="${c2}" opacity="0.14"/><rect x="44" y="54" width="170" height="28" rx="14" fill="${c1}" opacity="0.18"/><text x="129" y="72" text-anchor="middle" fill="${c1}" font-family="monospace" font-size="13" font-weight="700">${label}</text><text x="44" y="165" fill="#F8FAFC" font-family="sans-serif" font-size="40" font-weight="800">${metric}</text><rect x="44" y="215" width="260" height="8" rx="4" fill="#1E293B"/><rect x="44" y="215" width="210" height="8" rx="4" fill="url(#a)"/><path d="M400 280 L470 210 L530 235 L610 140 L675 165" fill="none" stroke="url(#a)" stroke-width="4" stroke-linecap="round"/><circle cx="610" cy="140" r="7" fill="${c1}"/></svg>`;
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg);
+}
+const defaultProjects=[
+  {
+    title:'Student Performance Analysis',
+    sub:'Data Science & Machine Learning · Public Repo',
+    type:'ml',
+    image:makeCoverSvg('ML · UCI DATASET','89% Accuracy','#00D4FF','#7C3AED'),
+    shortDesc:'EDA and predictive modeling on the UCI Student Performance dataset using Decision Tree & Random Forest (89% accuracy). Click for details →',
+    desc:'End-to-end exploratory data analysis and supervised learning pipeline on the UCI Student Performance dataset. Evaluated Logistic Regression, Decision Trees, KNN, SVM, and Random Forest.',
+    highlights:['89% prediction accuracy with Random Forest Classifier','Correlation analysis of study time, absences, and prior grades','Clean Seaborn & Matplotlib visual storytelling'],
+    tags:['Python','Scikit-learn','Pandas','Seaborn'],
+    link:'https://github.com/Ikram-Elkarkadi/python-data-analysis',
+    featured:true
+  },
+  {
+    title:'Menara Intel Master',
+    sub:'Internship @ Ménara Holding · Marrakech',
+    type:'web',
+    image:makeCoverSvg('FULL-STACK BI','-40% SQL Latency','#7C3AED','#F72585'),
+    shortDesc:'Full-stack real estate intelligence web app built during internship at Ménara Holding, Marrakech with BI dashboards. Click for details →',
+    desc:'Full-stack real estate intelligence web platform combining property operations with interactive analytics dashboards for management.',
+    highlights:['Built end-to-end with PHP, Laravel, MySQL & Chart.js','Optimized complex SQL queries (-40% page load time)','Interactive KPIs and real-time property filtering'],
+    tags:['PHP','Laravel','MySQL','Chart.js'],
+    link:'',
+    featured:false
+  },
+  {
+    title:'Attendance Management System',
+    sub:'Automation & Reporting',
+    type:'auto',
+    image:makeCoverSvg('AUTOMATION','Real-Time PDF','#00FF88','#00D4FF'),
+    shortDesc:'Automated student attendance tracking system with real-time analytics, absence alerts, and PDF reporting. Click for details →',
+    desc:'Automated attendance tracking application designed for academic environments with instant reporting and absence monitoring.',
+    highlights:['Real-time attendance analytics dashboard','Automated absence alert triggers','One-click PDF summary report generation'],
+    tags:['Python','SQL','Automation','Reporting'],
+    link:'',
+    featured:false
+  }
 ];
-function openProject(i){
-  const p=projectData[i];
-  document.getElementById('modalContent').innerHTML=`
-    <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--cyan);margin-bottom:8px">${p.sub}</div>
-    <h2 style="font-size:1.55rem;margin-bottom:14px">${p.title}</h2>
-    <p style="color:var(--muted);line-height:1.75;margin-bottom:18px;font-size:.93rem">${p.desc}</p>
-    <div style="margin-bottom:18px"><strong style="font-size:.85rem;color:var(--text)">Key Highlights:</strong>
-      <ul style="margin-top:8px;padding-left:20px;color:var(--muted);font-size:.88rem;line-height:1.7">${p.highlights.map(h=>`<li>${h}</li>`).join('')}</ul>
+function getProjects(){
+  try{
+    const saved=JSON.parse(localStorage.getItem('ikram_projects')||'null');
+    if(Array.isArray(saved)&&saved.length)return saved;
+  }catch{}
+  return defaultProjects;
+}
+function renderProjectsGrid(){
+  const list=getProjects();
+  const grid=document.getElementById('projectsGrid');
+  const typeLabels={ml:'DATA SCIENCE & ML',web:'FULL-STACK WEB',auto:'AUTOMATION'};
+  grid.innerHTML=list.map((p,i)=>`
+    <div class="project-card tilt-card" data-type="${p.type||'ml'}" onclick="openProject(${i})">
+      <div class="project-cover">
+        <img src="${p.image||makeCoverSvg('PROJECT',p.title.slice(0,18),'#00D4FF','#7C3AED')}" alt="${p.title}"/>
+        <span class="project-cover-badge">${typeLabels[p.type]||'PROJECT'}</span>
+      </div>
+      <div class="project-header">
+        <div class="project-name" style="margin:0">${p.title}</div>
+        <div class="project-links" onclick="event.stopPropagation()">
+          ${p.link?`<a href="${p.link}" target="_blank" class="project-link">GitHub ↗</a>`:`<span class="project-link" onclick="openProject(${i})">Details →</span>`}
+        </div>
+      </div>
+      <div class="project-body" style="padding-top:12px">
+        <div class="project-desc">${p.shortDesc||p.desc}</div>
+        <div class="project-tags">${(p.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      </div>
     </div>
-    <div class="project-tags" style="margin-bottom:22px">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-    ${p.link?`<a href="${p.link}" target="_blank" class="btn-primary" style="display:inline-block;padding:11px 24px;font-size:.86rem">Open on GitHub ↗</a>`:`<span style="font-size:.82rem;color:var(--muted)">🔒 Private / Internal Enterprise Project</span>`}
+  `).join('');
+  document.querySelectorAll('.tilt-card').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-0.5,y=(e.clientY-r.top)/r.height-0.5;
+      card.style.transform=`perspective(900px) rotateX(${(-y*8).toFixed(2)}deg) rotateY(${(x*8).toFixed(2)}deg) translateY(-6px)`;
+    });
+    card.addEventListener('mouseleave',()=>{card.style.transform='';});
+  });
+}
+renderProjectsGrid();
+
+function openProject(i){
+  const p=getProjects()[i];if(!p)return;
+  const imgSrc=p.image||makeCoverSvg('PROJECT',p.title.slice(0,18),'#00D4FF','#7C3AED');
+  document.getElementById('modalContent').innerHTML=`
+    <img src="${imgSrc}" alt="${p.title}" style="width:100%;height:220px;object-fit:cover;border-radius:14px;border:1px solid var(--border);margin-bottom:18px"/>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--cyan);margin-bottom:6px">${p.sub||''}</div>
+    <h2 style="font-size:1.5rem;margin-bottom:12px">${p.title}</h2>
+    <p style="color:var(--muted);line-height:1.75;margin-bottom:16px;font-size:.93rem">${p.desc||p.shortDesc||''}</p>
+    ${(p.highlights&&p.highlights.length)?`<div style="margin-bottom:18px"><strong style="font-size:.85rem;color:var(--text)">Key Highlights:</strong><ul style="margin-top:8px;padding-left:20px;color:var(--muted);font-size:.88rem;line-height:1.7">${p.highlights.map(h=>`<li>${h}</li>`).join('')}</ul></div>`:''}
+    <div class="project-tags" style="margin-bottom:22px">${(p.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    ${p.link?`<a href="${p.link}" target="_blank" class="btn-primary" style="display:inline-block;padding:11px 24px;font-size:.86rem">Open Project Link ↗</a>`:`<span style="font-size:.82rem;color:var(--muted)">🔒 Private / Internal Enterprise Project</span>`}
   `;
   document.getElementById('projectModal').classList.add('open');
 }
