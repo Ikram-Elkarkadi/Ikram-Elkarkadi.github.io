@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Ikram Elkarkadi | Interactive Voice & Data Science Presenter</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#020817;--card:rgba(15,23,42,0.82);--cyan:#00d4ff;--purple:#7c3aed;--green:#00ff88;--pink:#f72585;--text:#f8fafc;--muted:#94a3b8;--border:rgba(255,255,255,0.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+.bg-glow{position:fixed;inset:0;background:radial-gradient(circle at 20% 20%,rgba(0,212,255,0.12),transparent 45%),radial-gradient(circle at 80% 80%,rgba(124,58,237,0.14),transparent 45%);pointer-events:none;z-index:0}
+
+/* TOP BAR */
+header{position:relative;z-index:2;padding:14px 4%;background:rgba(2,8,23,0.9);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-badge{padding:5px 12px;border-radius:50px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600}
+.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.btn{padding:8px 16px;border-radius:50px;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--purple));border:none;color:#fff;box-shadow:0 4px 20px rgba(0,212,255,0.28)}
+.btn-primary:hover{transform:translateY(-2px);color:#fff}
+.btn-speaking{background:linear-gradient(135deg,var(--green),#059669);border:none;color:#020817}
+select.lang-sel{background:#0f172a;color:var(--text);border:1px solid var(--border);border-radius:50px;padding:7px 14px;font-size:.8rem;outline:none;cursor:pointer}
+
+/* MAIN STAGE */
+main{position:relative;z-index:1;flex:1;max-width:1200px;width:100%;margin:0 auto;padding:28px 4%;display:flex;flex-direction:column;gap:22px}
+.progress-dots{display:flex;gap:10px;justify-content:center;align-items:center}
+.dot{height:8px;width:36px;border-radius:10px;background:rgba(255,255,255,0.12);cursor:pointer;transition:all .3s}
+.dot.active{width:64px;background:linear-gradient(90deg,var(--cyan),var(--purple))}
+
+.slide-stage{background:var(--card);border:1px solid rgba(0,212,255,0.25);border-radius:24px;padding:34px;min-height:460px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:34px;align-items:center;box-shadow:0 25px 70px rgba(0,0,0,0.55);animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.slide-kicker{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.slide-title{font-size:clamp(1.8rem,3.5vw,2.7rem);font-weight:800;line-height:1.12;margin-bottom:16px}
+.slide-title span{background:linear-gradient(135deg,var(--cyan),var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.slide-text{color:var(--muted);font-size:.98rem;line-height:1.75;margin-bottom:20px}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.m-box{background:rgba(2,8,23,0.65);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center}
+.m-val{font-size:1.5rem;font-weight:800;color:var(--cyan)}
+.m-lbl{font-size:.74rem;color:var(--muted);margin-top:3px}
+
+/* VISUAL RIGHT PANEL */
+.visual-box{background:rgba(2,8,23,0.75);border:1px solid var(--border);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.visual-img{width:100%;max-height:280px;object-fit:cover;border-radius:12px;border:1px solid var(--border)}
+.upload-photo-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.78rem;color:var(--muted)}
+
+/* VOICE & NAV FOOTER */
+.presenter-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px 22px}
+.voice-wave{display:inline-flex;align-items:center;gap:3px;height:18px}
+.voice-wave span{width:3px;height:6px;background:var(--cyan);border-radius:3px;transition:height .2s}
+.voice-wave.on span{animation:wave 0.7s infinite ease-in-out alternate}
+.voice-wave.on span:nth-child(2){animation-delay:.15s}
+.voice-wave.on span:nth-child(3){animation-delay:.3s}
+.voice-wave.on span:nth-child(4){animation-delay:.45s}
+@keyframes wave{from{height:4px}to{height:18px}}
+
+/* GITHUB ANALYZER WIDGET */
+.gh-input-row{display:flex;gap:8px;margin-bottom:10px}
+.gh-input{flex:1;background:#020817;border:1px solid var(--border);border-radius:10px;padding:9px 12px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.82rem;outline:none}
+.gh-repos-list{display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto}
+.gh-repo-item{padding:10px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;display:flex;justify-content:space-between;align-items:center;font-size:.82rem}
+
+@media(max-width:880px){.slide-stage{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<header>
+  <div class="brand">
+    <a href="index.html" class="btn">← Back to Portfolio</a>
+    <span class="brand-badge">🎙️ VOICE &amp; DATA PITCH STUDIO</span>
+  </div>
+  <div class="controls">
+    <select class="lang-sel" id="langSel" onchange="updateSpeechLang()">
+      <option value="fr-FR">🇫🇷 Français (Soutenance)</option>
+      <option value="en-US">🇬🇧 English (International)</option>
+    </select>
+    <button class="btn" id="sfxBtn" onclick="toggleSfx()">🔊 Sound FX: ON</button>
+    <button class="btn btn-primary" id="speakBtn" onclick="toggleSpeak()">🎙️ Play Voice Narration</button>
+  </div>
+</header>
+
+<main>
+  <div class="progress-dots" id="dots"></div>
+
+  <div class="slide-stage" id="stage"></div>
+
+  <div class="presenter-footer">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="voice-wave" id="wave"><span></span><span></span><span></span><span></span></div>
+      <span id="statusTxt" style="font-size:.84rem;color:var(--muted)">Ready to present · Click "Play Voice Narration" or use ← / → keys</span>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn" onclick="prevSlide()">⏮️ Previous</button>
+      <button class="btn btn-primary" onclick="nextSlide()">Next Slide ⏭️</button>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let cur=0, sfxOn=true, speaking=false, chartInst=null;
+
+const slides=[
+  {
+    kicker:'01 / ACADEMIC & PROFESSIONAL PROFILE',
+    title:'Ikram <span>Elkarkadi</span> — Data Science & AI',
+    text:'Bachelor in Data Science (SD) at EST Kelaâ des Sraghna, Université Cadi Ayyad, following a DUT in Data Engineering. Passionate about transforming complex raw datasets into predictive models and executive business intelligence.',
+    metrics:[{v:'Bachelor',l:'Data Science (SD)'},{v:'DUT',l:'Data Engineering'},{v:'89%',l:'Best ML Accuracy'}],
+    img:'https://ikram-elkarkadi.github.io/assets/hero-banner.svg',
+    speech:{
+      'fr-FR':"Bonjour et bienvenue dans ma présentation interactive. Je suis Ikram Elkarkadi, étudiante en Licence Science des Données à l'EST Kelaâ des Sraghna, Université Cadi Ayyad, après avoir obtenu mon DUT en Ingénierie des Données. Mon objectif est de transformer les données brutes en intelligence décisionnelle.",
+      'en-US':"Hello and welcome to my interactive presentation. I am Ikram Elkarkadi, a Bachelor of Data Science student at EST Kelaa des Sraghna, Cadi Ayyad University, following a DUT in Data Engineering. My focus is turning raw data into actionable intelligence."
+    }
+  },
+  {
+    kicker:'02 / END-TO-END DATA SCIENCE METHODOLOGY',
+    title:'From <span>Ingestion</span> to <span>ML Deployment</span>',
+    text:'Every project follows a rigorous 5-stage scientific workflow: SQL/CSV Data Ingestion, Exploratory Data Analysis with Pandas & Seaborn, Feature Scaling, Supervised ML Benchmarking, and Interactive BI Deployment.',
+    metrics:[{v:'649',l:'UCI Dataset Rows'},{v:'33',l:'Analyzed Features'},{v:'5 Models',l:'Benchmarked'}],
+    img:'https://ikram-elkarkadi.github.io/assets/pipeline.svg',
+    speech:{
+      'fr-FR':"Ma méthodologie suit cinq étapes rigoureuses : l'ingestion des données SQL et CSV, l'analyse exploratoire avec Pandas et Seaborn, la préparation des variables, l'entraînement de cinq modèles de Machine Learning, et enfin le déploiement sur des tableaux de bord interactifs.",
+      'en-US':"My methodology follows five rigorous stages: SQL and CSV data ingestion, exploratory analysis with Pandas and Seaborn, feature engineering, training five machine learning models, and deploying interactive business intelligence dashboards."
+    }
+  },
+  {
+    kicker:'03 / MACHINE LEARNING BENCHMARK',
+    title:'Predictive Modeling: <span>89% Accuracy</span>',
+    text:'In the Student Performance ML Pipeline, Random Forest achieved 89% accuracy (F1-Score 0.88), outperforming SVM (86%), Decision Tree (82%), KNN (80%), and Logistic Regression (78%). Complete with Pytest unit tests and Streamlit app.',
+    metrics:[{v:'89%',l:'Random Forest'},{v:'0.88',l:'F1-Score'},{v:'Pytest',l:'Verified Pipeline'}],
+    chart:true,
+    speech:{
+      'fr-FR':"Sur le projet d'analyse de performance des étudiants, j'ai comparé cinq algorithmes supervisés. La forêt aléatoire obtient la meilleure performance avec quatre-vingt-neuf pour cent de précision, accompagnée d'un pipeline Scikit-learn reproductible et de tests unitaires Pytest.",
+      'en-US':"In the Student Performance machine learning pipeline, I benchmarked five supervised classifiers. Random Forest achieved the highest accuracy at eighty-nine percent, packaged in a reproducible Scikit-learn pipeline with Pytest unit tests."
+    }
+  },
+  {
+    kicker:'04 / LIVE GITHUB ANALYZER FUNCTION',
+    title:'Real-Time <span>GitHub Portfolio Audit</span>',
+    text:'This built-in tool connects live to the GitHub REST API to inspect any profile, audit public repositories, verify descriptions and topics, and measure technical completeness in real time.',
+    metrics:[{v:'REST API',l:'Live GitHub Sync'},{v:'100%',l:'Public Portfolio'},{v:'CI/Tests',l:'Code Quality'}],
+    githubTool:true,
+    speech:{
+      'fr-FR':"Cette application intègre une fonction d'audit GitHub en temps réel via l'API REST. Elle permet d'analyser instantanément les dépôts publics, les langages utilisés et la qualité de la documentation directement pendant la soutenance.",
+      'en-US':"This application includes a live GitHub Audit function powered by the GitHub REST API. It inspects public repositories, programming languages, and documentation quality in real time during the presentation."
+    }
+  },
+  {
+    kicker:'05 / INDUSTRY IMPACT & INTERNSHIP',
+    title:'<span>Ménara Holding</span> · Real Estate BI',
+    text:'During my internship at Ménara Holding in Marrakech, I built a full-stack real estate intelligence web platform using PHP/Laravel, MySQL, and Chart.js — optimizing SQL queries to cut page load latency by 40%.',
+    metrics:[{v:'-40%',l:'SQL Query Latency'},{v:'Laravel',l:'Full-Stack App'},{v:'Chart.js',l:'Executive KPIs'}],
+    img:'https://ikram-elkarkadi.github.io/assets/projects-showcase.svg',
+    speech:{
+      'fr-FR':"Enfin, lors de mon stage chez Ménara Holding à Marrakech, j'ai développé une application web immobilière intégrant des tableaux de bord décisionnels, tout en optimisant les requêtes SQL pour réduire le temps de chargement de quarante pour cent. Merci pour votre attention !",
+      'en-US':"Finally, during my internship at Menara Holding in Marrakech, I built a full-stack real estate web application with business intelligence dashboards, optimizing SQL queries to reduce load latency by forty percent. Thank you for your attention!"
+    }
+  }
+];
+
+function playChime(freq=520){
+  if(!sfxOn)return;
+  try{
+    const ac=new (window.AudioContext||window.webkitAudioContext)();
+    const osc=ac.createOscillator(),g=ac.createGain();
+    osc.type='sine';osc.frequency.setValueAtTime(freq,ac.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(freq*1.35,ac.currentTime+0.12);
+    g.gain.setValueAtTime(0.06,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.2);
+    osc.connect(g);g.connect(ac.destination);osc.start();osc.stop(ac.currentTime+0.2);
+  }catch{}
+}
+function toggleSfx(){sfxOn=!sfxOn;document.getElementById('sfxBtn').textContent=sfxOn?'🔊 Sound FX: ON':'🔇 Sound FX: OFF';if(sfxOn)playChime(600);}
+
+function renderDots(){
+  document.getElementById('dots').innerHTML=slides.map((_,i)=>`<div class="dot ${i===cur?'active':''}" onclick="goSlide(${i})"></div>`).join('');
+}
+
+function getCustomPhoto(i){return localStorage.getItem('presenter_photo_'+i)||'';}
+function uploadSlidePhoto(input){
+  const f=input.files&&input.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{localStorage.setItem('presenter_photo_'+cur,e.target.result);renderSlide();};
+  r.readAsDataURL(f);
+}
+
+function renderSlide(){
+  renderDots();
+  const s=slides[cur];
+  const customImg=getCustomPhoto(cur);
+  let rightHtml='';
+  if(s.chart){
+    rightHtml=`<div class="visual-box"><div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--cyan)">LIVE MODEL ACCURACY COMPARISON (%)</div><canvas id="mlChart" height="230"></canvas></div>`;
+  } else if(s.githubTool){
+    rightHtml=`<div class="visual-box">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--cyan)">LIVE GITHUB REPO ANALYZER</div>
+      <div class="gh-input-row">
+        <input class="gh-input" id="ghUser" value="Ikram-Elkarkadi" placeholder="GitHub username"/>
+        <button class="btn btn-primary" onclick="fetchGitHub()">Analyze ⚡</button>
+      </div>
+      <div class="gh-repos-list" id="ghOut"><div style="color:var(--muted);font-size:.82rem">Loading live GitHub data...</div></div>
+    </div>`;
+  } else {
+    const imgUrl=customImg||s.img;
+    rightHtml=`<div class="visual-box">
+      <img src="${imgUrl}" class="visual-img" alt="${s.title}"/>
+      <div class="upload-photo-bar">
+        <span>📸 Slide Visual / Photo</span>
+        <label class="btn" style="padding:5px 12px;font-size:.75rem">Upload Custom Photo<input type="file" accept="image/*" style="display:none" onchange="uploadSlidePhoto(this)"/></label>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('stage').innerHTML=`
+    <div>
+      <div class="slide-kicker">${s.kicker}</div>
+      <h1 class="slide-title">${s.title}</h1>
+      <p class="slide-text">${s.text}</p>
+      <div class="metric-row">${s.metrics.map(m=>`<div class="m-box"><div class="m-val">${m.v}</div><div class="m-lbl">${m.l}</div></div>`).join('')}</div>
+    </div>
+    ${rightHtml}
+  `;
+
+  if(s.chart){
+    if(chartInst)chartInst.destroy();
+    chartInst=new Chart(document.getElementById('mlChart'),{
+      type:'bar',
+      data:{labels:['Random Forest','SVM','Decision Tree','KNN','Logistic Reg'],datasets:[{data:[89,86,82,80,78],backgroundColor:['#00ff88','#00d4ff','#7c3aed','#a855f7','#f72585'],borderRadius:8}]},
+      options:{plugins:{legend:{display:false}},scales:{y:{min:60,max:100,ticks:{color:'#94a3b8'},grid:{color:'rgba(255,255,255,0.06)'}},x:{ticks:{color:'#e2e8f0'},grid:{display:false}}}}
+    });
+  }
+  if(s.githubTool)fetchGitHub();
+}
+
+async function fetchGitHub(){
+  const u=document.getElementById('ghUser').value.trim()||'Ikram-Elkarkadi';
+  const out=document.getElementById('ghOut');
+  out.innerHTML='<div style="color:var(--cyan);font-size:.82rem">Fetching live repos from api.github.com...</div>';
+  try{
+    const res=await fetch(`https://api.github.com/users/${encodeURIComponent(u)}/repos?sort=updated&per_page=8`);
+    const repos=await res.json();
+    if(!Array.isArray(repos)){out.innerHTML='<div style="color:var(--pink)">User not found or rate limited.</div>';return;}
+    out.innerHTML=repos.map(r=>`
+      <div class="gh-repo-item">
+        <div><a href="${r.html_url}" target="_blank" style="color:var(--cyan);font-weight:700;text-decoration:none">${r.name} ↗</a><div style="color:var(--muted);font-size:.73rem">${r.description||'Public repository'}</div></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--green)">${r.language||'Markdown'}</span>
+      </div>
+    `).join('');
+  }catch{out.innerHTML='<div style="color:var(--pink)">Network error fetching GitHub API.</div>';}
+}
+
+function speakCurrent(){
+  if(!('speechSynthesis' in window)){alert('Voice narration not supported in this browser.');return;}
+  window.speechSynthesis.cancel();
+  const lang=document.getElementById('langSel').value;
+  const utter=new SpeechSynthesisUtterance(slides[cur].speech[lang]);
+  utter.lang=lang;utter.rate=1.0;
+  utter.onstart=()=>{
+    speaking=true;
+    document.getElementById('wave').classList.add('on');
+    document.getElementById('speakBtn').className='btn btn-speaking';
+    document.getElementById('speakBtn').textContent='⏹ Stop Voice';
+    document.getElementById('statusTxt').textContent='🔊 Narrating Slide '+(cur+1)+' of '+slides.length+'...';
+  };
+  utter.onend=()=>{
+    speaking=false;
+    document.getElementById('wave').classList.remove('on');
+    document.getElementById('speakBtn').className='btn btn-primary';
+    document.getElementById('speakBtn').textContent='🎙️ Play Voice Narration';
+    document.getElementById('statusTxt').textContent='Slide '+(cur+1)+' / '+slides.length+' finished';
+  };
+  window.speechSynthesis.speak(utter);
+}
+function toggleSpeak(){
+  if(speaking){window.speechSynthesis.cancel();speaking=false;document.getElementById('wave').classList.remove('on');document.getElementById('speakBtn').className='btn btn-primary';document.getElementById('speakBtn').textContent='🎙️ Play Voice Narration';}
+  else speakCurrent();
+}
+function updateSpeechLang(){if(speaking)speakCurrent();}
+function goSlide(i){cur=i;playChime(480+i*60);renderSlide();if(speaking)speakCurrent();}
+function nextSlide(){cur=(cur+1)%slides.length;goSlide(cur);}
+function prevSlide(){cur=(cur-1+slides.length)%slides.length;goSlide(cur);}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')nextSlide();if(e.key==='ArrowLeft')prevSlide();});
+
+renderSlide();
+</script>
+</body>
+</html>
