@@ -133,6 +133,7 @@ textarea{resize:vertical}
   </div>
   <div class="sb-nav" id="sb-nav">
     <a href="#" class="act" onclick="showPane('dashboard',this)"><span class="ico">📊</span> Dashboard</a>
+    <a href="#" onclick="showPane('projects',this)" id="nav-projects"><span class="ico">🚀</span> Projects &amp; Photos</a>
     <a href="#" onclick="showPane('messages',this)"><span class="ico">✉️</span> Messages <span id="msg-badge" style="margin-left:auto;background:var(--cyan);color:var(--bg);border-radius:100px;padding:1px 8px;font-size:.7rem;font-family:'JetBrains Mono',monospace"></span></a>
     <a href="#" onclick="showPane('collabs',this)"><span class="ico">🤝</span> Collaborations <span id="col-badge" style="margin-left:auto;background:var(--grn);color:var(--bg);border-radius:100px;padding:1px 8px;font-size:.7rem;font-family:'JetBrains Mono',monospace"></span></a>
     <a href="#" onclick="showPane('blog',this)"><span class="ico">📝</span> Blog Posts</a>
@@ -162,7 +163,7 @@ textarea{resize:vertical}
         <div class="stat-card"><div class="stat-ico">✉️</div><div class="stat-info"><div class="num gt" id="cnt-msgs">0</div><div class="lbl">Messages</div></div></div>
         <div class="stat-card"><div class="stat-ico">🤝</div><div class="stat-info"><div class="num gt" id="cnt-cols">0</div><div class="lbl">Collaborations</div></div></div>
         <div class="stat-card"><div class="stat-ico">📝</div><div class="stat-info"><div class="num gt" id="cnt-blog">0</div><div class="lbl">Blog Posts</div></div></div>
-        <div class="stat-card"><div class="stat-ico">🗂️</div><div class="stat-info"><div class="num gt">3</div><div class="lbl">Projects</div></div></div>
+        <div class="stat-card"><div class="stat-ico">🗂️</div><div class="stat-info"><div class="num gt" id="cnt-proj">3</div><div class="lbl">Projects</div></div></div>
       </div>
       <div class="panel">
         <div class="panel-head"><h3>📋 Recent Messages</h3><a href="#" onclick="showPane('messages',null)" style="color:var(--cyan);font-size:.82rem">View all →</a></div>
@@ -171,6 +172,58 @@ textarea{resize:vertical}
       <div class="panel">
         <div class="panel-head"><h3>🤝 Recent Collaborations</h3><a href="#" onclick="showPane('collabs',null)" style="color:var(--cyan);font-size:.82rem">View all →</a></div>
         <div class="panel-body" id="recent-cols"><div class="empty">No collaboration requests yet.</div></div>
+      </div>
+    </div>
+
+    <!-- PROJECTS & PHOTOS -->
+    <div class="section-pane" id="pane-projects">
+      <div class="panel" style="margin-bottom:24px">
+        <div class="panel-head"><h3 id="p-form-title">🚀 Add / Edit Project &amp; Photo</h3><button class="btn-sm" onclick="resetProjectForm()">+ New Project</button></div>
+        <div class="panel-body">
+          <form onsubmit="saveProject(event)">
+            <input type="hidden" id="p-idx" value="-1"/>
+            <div class="frow">
+              <div class="fg"><label>Project Title *</label><input type="text" id="p-title" placeholder="e.g. Student Performance Analysis" required/></div>
+              <div class="fg"><label>Category *</label>
+                <select id="p-type">
+                  <option value="ml">Data Science &amp; ML</option>
+                  <option value="web">Full-Stack Web</option>
+                  <option value="auto">Automation</option>
+                </select>
+              </div>
+            </div>
+            <div class="frow">
+              <div class="fg"><label>Subtitle / Context</label><input type="text" id="p-sub" placeholder="e.g. Internship @ Ménara Holding · Marrakech"/></div>
+              <div class="fg"><label>GitHub / Demo Link</label><input type="url" id="p-link" placeholder="https://github.com/..."/></div>
+            </div>
+            <div class="frow">
+              <div class="fg">
+                <label>📸 Upload Project Photo (from PC)</label>
+                <input type="file" id="p-file" accept="image/*" onchange="handlePhotoUpload(this)"/>
+              </div>
+              <div class="fg">
+                <label>Or Image URL</label>
+                <input type="text" id="p-image" placeholder="https://... or uploaded automatically" oninput="previewPhoto(this.value)"/>
+              </div>
+            </div>
+            <div class="fg" id="p-preview-wrap" style="display:none">
+              <label>Photo Preview</label>
+              <img id="p-preview" style="max-height:170px;border-radius:12px;border:1px solid var(--bdr);object-fit:cover"/>
+            </div>
+            <div class="fg"><label>Short Summary (shown on card) *</label><input type="text" id="p-short" placeholder="1-2 lines summary for the project card..." required/></div>
+            <div class="fg"><label>Full Description (shown when clicked) *</label><textarea id="p-desc" placeholder="Detailed explanation of problem, methodology, and results..." required style="min-height:100px"></textarea></div>
+            <div class="frow">
+              <div class="fg"><label>Key Highlights (one per line)</label><textarea id="p-highlights" placeholder="89% prediction accuracy&#10;Optimized SQL queries by 40%" style="min-height:90px"></textarea></div>
+              <div class="fg"><label>Tech Stack Tags (comma separated)</label><input type="text" id="p-tags" placeholder="Python, Scikit-learn, Pandas, SQL"/></div>
+            </div>
+            <button type="submit" class="btn-p">💾 Save Project &amp; Photo</button>
+          </form>
+          <div class="suc-msg" id="p-suc">✅ Project saved! Refresh index.html to see it live.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>📁 Your Projects (Click Edit to change photo or info)</h3></div>
+        <div class="panel-body" id="projects-list"></div>
       </div>
     </div>
 
@@ -269,8 +322,9 @@ function showPane(id,el){
   document.querySelectorAll('.section-pane').forEach(p=>p.classList.remove('act'));
   document.getElementById('pane-'+id).classList.add('act');
   if(el){document.querySelectorAll('.sb-nav a').forEach(a=>a.classList.remove('act'));el.classList.add('act');}
-  const titles={dashboard:'Dashboard',messages:'Contact Messages',collabs:'Collaboration Requests',blog:'Blog Posts',settings:'Settings'};
+  const titles={dashboard:'Dashboard',projects:'Projects & Photos',messages:'Contact Messages',collabs:'Collaboration Requests',blog:'Blog Posts',settings:'Settings'};
   document.getElementById('pane-title').textContent=titles[id]||id;
+  if(id==='projects')renderProjectsAdmin();
   if(id==='messages')renderMsgs();
   if(id==='collabs')renderCols();
   if(id==='blog')renderBlog();
@@ -366,9 +420,114 @@ function clearData(key){
   alert('Data cleared.');
 }
 
+// PROJECTS MANAGER
+const DEFAULT_PROJECTS=[
+  {title:'Student Performance Analysis',sub:'Data Science & Machine Learning · Public Repo',type:'ml',image:'',shortDesc:'EDA and predictive modeling on the UCI Student Performance dataset using Decision Tree & Random Forest (89% accuracy).',desc:'End-to-end exploratory data analysis and supervised learning pipeline on the UCI Student Performance dataset. Evaluated Logistic Regression, Decision Trees, KNN, SVM, and Random Forest.',highlights:['89% prediction accuracy with Random Forest Classifier','Correlation analysis of study time, absences, and prior grades','Clean Seaborn & Matplotlib visual storytelling'],tags:['Python','Scikit-learn','Pandas','Seaborn'],link:'https://github.com/Ikram-Elkarkadi/python-data-analysis'},
+  {title:'Menara Intel Master',sub:'Internship @ Ménara Holding · Marrakech',type:'web',image:'',shortDesc:'Full-stack real estate intelligence web app built during internship at Ménara Holding, Marrakech with BI dashboards.',desc:'Full-stack real estate intelligence web platform combining property operations with interactive analytics dashboards for management.',highlights:['Built end-to-end with PHP, Laravel, MySQL & Chart.js','Optimized complex SQL queries (-40% page load time)','Interactive KPIs and real-time property filtering'],tags:['PHP','Laravel','MySQL','Chart.js'],link:''},
+  {title:'Attendance Management System',sub:'Automation & Reporting',type:'auto',image:'',shortDesc:'Automated student attendance tracking system with real-time analytics, absence alerts, and PDF reporting.',desc:'Automated attendance tracking application designed for academic environments with instant reporting and absence monitoring.',highlights:['Real-time attendance analytics dashboard','Automated absence alert triggers','One-click PDF summary report generation'],tags:['Python','SQL','Automation','Reporting'],link:''}
+];
+function getProjects(){
+  try{const s=JSON.parse(localStorage.getItem('ikram_projects')||'null');if(Array.isArray(s)&&s.length)return s;}catch{}
+  return JSON.parse(JSON.stringify(DEFAULT_PROJECTS));
+}
+function previewPhoto(src){
+  const wrap=document.getElementById('p-preview-wrap'),img=document.getElementById('p-preview');
+  if(src){img.src=src;wrap.style.display='block';}else{wrap.style.display='none';}
+}
+function handlePhotoUpload(input){
+  const file=input.files&&input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const maxW=900,scale=Math.min(1,maxW/img.width);
+      const c=document.createElement('canvas');c.width=img.width*scale;c.height=img.height*scale;
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      const dataUrl=c.toDataURL('image/jpeg',0.82);
+      document.getElementById('p-image').value=dataUrl;
+      previewPhoto(dataUrl);
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function renderProjectsAdmin(){
+  const list=getProjects();
+  document.getElementById('cnt-proj').textContent=list.length;
+  const el=document.getElementById('projects-list');
+  el.innerHTML=list.map((p,i)=>`
+    <div class="blog-item" style="align-items:center">
+      <div style="display:flex;gap:14px;align-items:center;flex:1">
+        ${p.image?`<img src="${p.image}" style="width:84px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--bdr)"/>`:`<div style="width:84px;height:56px;border-radius:8px;background:var(--card);border:1px dashed var(--bdr);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--t3)">No photo</div>`}
+        <div>
+          <h4>${p.title}</h4>
+          <p>${p.shortDesc||p.desc||''}</p>
+          <div class="meta">${(p.tags||[]).map(t=>`<span style="background:#00d4ff14;border:1px solid #00d4ff33;color:var(--cyan);padding:2px 8px;border-radius:100px;font-size:.7rem;font-family:'JetBrains Mono',monospace">${t}</span>`).join('')}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-sm" onclick="editProject(${i})">✏️ Edit</button>
+        <button class="btn-sm btn-del" onclick="deleteProject(${i})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+function editProject(i){
+  const p=getProjects()[i];if(!p)return;
+  document.getElementById('p-idx').value=i;
+  document.getElementById('p-form-title').textContent='✏️ Editing: '+p.title;
+  document.getElementById('p-title').value=p.title||'';
+  document.getElementById('p-type').value=p.type||'ml';
+  document.getElementById('p-sub').value=p.sub||'';
+  document.getElementById('p-link').value=p.link||'';
+  document.getElementById('p-image').value=p.image||'';
+  previewPhoto(p.image||'');
+  document.getElementById('p-short').value=p.shortDesc||'';
+  document.getElementById('p-desc').value=p.desc||'';
+  document.getElementById('p-highlights').value=(p.highlights||[]).join('\n');
+  document.getElementById('p-tags').value=(p.tags||[]).join(', ');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetProjectForm(){
+  document.getElementById('p-idx').value=-1;
+  document.getElementById('p-form-title').textContent='🚀 Add New Project & Photo';
+  ['p-title','p-sub','p-link','p-image','p-short','p-desc','p-highlights','p-tags'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('p-file').value='';
+  previewPhoto('');
+}
+function saveProject(e){
+  e.preventDefault();
+  const list=getProjects();
+  const idx=parseInt(document.getElementById('p-idx').value,10);
+  const item={
+    title:document.getElementById('p-title').value.trim(),
+    type:document.getElementById('p-type').value,
+    sub:document.getElementById('p-sub').value.trim(),
+    link:document.getElementById('p-link').value.trim(),
+    image:document.getElementById('p-image').value.trim(),
+    shortDesc:document.getElementById('p-short').value.trim(),
+    desc:document.getElementById('p-desc').value.trim(),
+    highlights:document.getElementById('p-highlights').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    tags:document.getElementById('p-tags').value.split(',').map(s=>s.trim()).filter(Boolean)
+  };
+  if(idx>=0&&idx<list.length)list[idx]=item; else list.push(item);
+  localStorage.setItem('ikram_projects',JSON.stringify(list));
+  document.getElementById('p-suc').classList.add('sh');
+  setTimeout(()=>document.getElementById('p-suc').classList.remove('sh'),3500);
+  resetProjectForm();renderProjectsAdmin();
+}
+function deleteProject(i){
+  if(!confirm('Delete this project?'))return;
+  const list=getProjects();list.splice(i,1);localStorage.setItem('ikram_projects',JSON.stringify(list));renderProjectsAdmin();
+}
+
 // Set today's date as default
 document.getElementById('b-date').valueAsDate=new Date();
 document.getElementById('l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+if(location.hash==='#projects'){
+  const origLogin=doLogin;
+  window.doLogin=function(){origLogin();if(document.getElementById('main').style.display==='block'){showPane('projects',document.getElementById('nav-projects'));}};
+}
 </script>
 </body>
 </html>
