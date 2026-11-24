@@ -1,0 +1,56 @@
+<svg width="900" height="270" viewBox="0 0 900 270" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgP" x1="0" y1="0" x2="900" y2="270" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#070B19"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="cCyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.03"/>
+    </linearGradient>
+    <linearGradient id="cIndigo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0.03"/>
+    </linearGradient>
+    <linearGradient id="cEmerald" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0.03"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="270" rx="18" fill="url(#bgP)" stroke="#1E293B" stroke-width="1.5"/>
+  <text x="32" y="38" fill="#38BDF8" font-family="Consolas, monospace" font-size="12" font-weight="700" letter-spacing="1.5">REPRESENTATIVE PROJECTS &amp; MEASURABLE IMPACT</text>
+
+  <!-- Card 1: Student Performance Analysis -->
+  <rect x="30" y="56" width="268" height="188" rx="14" fill="url(#cCyan)" stroke="#06B6D4" stroke-opacity="0.4"/>
+  <rect x="46" y="72" width="96" height="22" rx="11" fill="#06B6D4" fill-opacity="0.18"/>
+  <text x="94" y="87" text-anchor="middle" fill="#38BDF8" font-family="Consolas, monospace" font-size="10.5" font-weight="700">ML / DATA</text>
+  <text x="46" y="120" fill="#F8FAFC" font-family="Segoe UI, sans-serif" font-size="15.5" font-weight="700">Student Performance</text>
+  <text x="46" y="140" fill="#94A3B8" font-family="Segoe UI, sans-serif" font-size="12">UCI Dataset EDA &amp; Predictive</text>
+  <text x="46" y="156" fill="#94A3B8" font-family="Segoe UI, sans-serif" font-size="12">Modeling (5 ML Classifiers)</text>
+  <text x="46" y="192" fill="#10B981" font-family="Segoe UI, sans-serif" font-size="22" font-weight="800">89% Acc</text>
+  <text x="46" y="210" fill="#64748B" font-family="Consolas, monospace" font-size="10.5">Random Forest · Python</text>
+  <text x="46" y="230" fill="#38BDF8" font-family="Consolas, monospace" font-size="10.5">Pandas · Scikit-learn ↗</text>
+
+  <!-- Card 2: Menara Intel Master -->
+  <rect x="316" y="56" width="268" height="188" rx="14" fill="url(#cIndigo)" stroke="#6366F1" stroke-opacity="0.4"/>
+  <rect x="332" y="72" width="110" height="22" rx="11" fill="#6366F1" fill-opacity="0.2"/>
+  <text x="387" y="87" text-anchor="middle" fill="#A5B4FC" font-family="Consolas, monospace" font-size="10.5" font-weight="700">INTERNSHIP</text>
+  <text x="332" y="120" fill="#F8FAFC" font-family="Segoe UI, sans-serif" font-size="15.5" font-weight="700">Menara Intel Master</text>
+  <text x="332" y="140" fill="#94A3B8" font-family="Segoe UI, sans-serif" font-size="12">Real Estate BI Web App</text>
+  <text x="332" y="156" fill="#94A3B8" font-family="Segoe UI, sans-serif" font-size="12">@ Ménara Holding Marrakech</text>
+  <text x="332" y="192" fill="#A5B4FC" font-family="Segoe UI, sans-serif" font-size="22" font-weight="800">-40% Latency</text>
+  <text x="332" y="210" fill="#64748B" font-family="Consolas, monospace" font-size="10.5">Optimized SQL Queries</text>
+  <text x="332" y="230" fill="#A5B4FC" font-family="Consolas, monospace" font-size="10.5">PHP · Laravel · Chart.js ↗</text>
+
+  <!-- Card 3: Attendance System & Portfolio -->
+  <rect x="602" y="56" width="268" height="188" rx="14" fill="url(#cEmerald)" stroke="#10B981" stroke-opacity="0.4"/>
+  <rect x="618" y="72" width="114" height="22" rx="11" fill="#10B981" fill-opacity="0.18"/>
+  <text x="675" y="87" text-anchor="middle" fill="#34D399" font-family="Consolas, monospace" font-size="10.5" font-weight="700">AUTOMATION</text>
+  <text x="618" y="120" fill="#F8FAFC" font-family="Segoe UI, sans-serif" font-size="15.5" font-weight="700">Attendance &amp; Data Lab</text>
+  <text x="618" y="140" fill="#94A3B8" font-family="Segoe UI, sans-serif" font-size="12">Automated Tracking, Alerts</text>
+  <text x="618" y="156" fill="#94A3B8" font-family="Segoe UI, sans-serif" font-size="12">&amp; Live ML Grade Simulator</text>
+  <text x="618" y="192" fill="#34D399" font-family="Segoe UI, sans-serif" font-size="22" font-weight="800">Real-Time</text>
+  <text x="618" y="210" fill="#64748B" font-family="Consolas, monospace" font-size="10.5">PDF Reports &amp; Dashboards</text>
+  <text x="618" y="230" fill="#34D399" font-family="Consolas, monospace" font-size="10.5">Python · SQL · Interactive ↗</text>
+</svg>
